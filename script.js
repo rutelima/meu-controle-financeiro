@@ -28,13 +28,27 @@ function atualizarValores() {
   totalInvestimentosEl.textContent = `R$ ${investimentos.toFixed(2)}`;
 }
 
+function removerTransacao(index) {
+  transacoes.splice(index, 1);
+  localStorage.setItem('transacoes', JSON.stringify(transacoes));
+  renderizarLista();
+  atualizarValores();
+}
+
 function renderizarLista() {
   lista.innerHTML = '';
   transacoes.forEach((t, index) => {
     const li = document.createElement('li');
+    li.classList.add(t.tipo);
     li.innerHTML = `
-      <span>${t.descricao}</span>
-      <strong>R$ ${t.valor.toFixed(2)}</strong>
+      <div class="info-item">
+        <span>${t.descricao}</span>
+        <small>${t.tipo}</small>
+      </div>
+      <div class="acoes-item">
+        <strong>R$ ${t.valor.toFixed(2)}</strong>
+        <button class="btn-apagar" onclick="removerTransacao(${index})" title="Apagar">🗑️</button>
+      </div>
     `;
     lista.appendChild(li);
   });
