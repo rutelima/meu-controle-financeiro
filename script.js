@@ -57,10 +57,15 @@ function renderizarLista() {
   transacoes.forEach((t) => {
     const li = document.createElement('li');
     li.classList.add(t.tipo);
+    
+    const statusTag = t.status === 'Pendente' 
+      ? `<span class="badge badge-pendente">⏳ Pendente</span>` 
+      : `<span class="badge badge-pago">✅ Pago</span>`;
+
     li.innerHTML = `
       <div class="info-item">
-        <span>${t.descricao}</span>
-        <small>${t.tipo}</small>
+        <strong>${t.descricao}</strong>
+        <small>${t.categoria || 'Geral'} • ${t.metodo || 'PIX'} ${statusTag}</small>
       </div>
       <div class="acoes-item">
         <strong>R$ ${t.valor.toFixed(2)}</strong>
@@ -85,9 +90,20 @@ form.addEventListener('submit', async (e) => {
   const descricao = document.getElementById('descricao').value;
   const valor = parseFloat(document.getElementById('valor').value);
   const tipo = document.getElementById('tipo').value;
+  const categoria = document.getElementById('categoria').value;
+  const metodo = document.getElementById('metodo').value;
+  const status = document.getElementById('status').value;
 
   try {
-    await addDoc(transacoesRef, { descricao, valor, tipo });
+    await addDoc(transacoesRef, { 
+      descricao, 
+      valor, 
+      tipo, 
+      categoria, 
+      metodo, 
+      status,
+      data: new Date().toISOString()
+    });
     form.reset();
   } catch (error) {
     console.error("Erro ao salvar:", error);
