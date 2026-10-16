@@ -3,14 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nosso Dinheiro 💚</title>
+  <title>Nosso Dinheiro 💰</title>
+
+  <!-- Ícone para o navegador (Favicon) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💰</text></svg>">
+
+  <!-- Ícone para a Tela Inicial do telemóvel (Android / iPhone) -->
+  <link rel="apple-touch-icon" href="https://fav.farm/💰">
+
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
   <main class="container">
     <header>
-      <h1>Nosso Dinheiro 💚</h1>
+      <h1>Nosso Dinheiro 💰</h1>
       <p>Resumo financeiro do casal</p>
     </header>
 
@@ -106,14 +113,27 @@
 
     <!-- Cards de Saldos Individuais -->
     <section class="cards-resumo">
-      <div class="card saldo-card">
+      <div class="card saldo-card saldo-rute-card">
         <h3>Saldo Rute 👩</h3>
-        <p id="saldo-rute" class="valor positivo">R$ 0,00</p>
+        <p id="saldo-rute" class="valor">R$ 0,00</p>
+      </div>
+
+      <div class="card saldo-card saldo-vanderson-card">
+        <h3>Saldo Vanderson 👨</h3>
+        <p id="saldo-vanderson" class="valor">R$ 0,00</p>
+      </div>
+    </section>
+
+    <!-- Cards de Fatura do Cartão de Crédito -->
+    <section class="cards-resumo">
+      <div class="card saldo-card">
+        <h3>💳 Fatura Cartão Rute</h3>
+        <p id="fatura-rute" class="valor negativo">R$ 0,00</p>
       </div>
 
       <div class="card saldo-card">
-        <h3>Saldo Vanderson 👨</h3>
-        <p id="saldo-vanderson" class="valor positivo">R$ 0,00</p>
+        <h3>💳 Fatura Cartão Vanderson</h3>
+        <p id="fatura-vanderson" class="valor negativo">R$ 0,00</p>
       </div>
     </section>
 
@@ -125,6 +145,6 @@
 
   </main>
 
-<script type="module" src="script.js?v=11"></script>
+  <script type="module" src="script.js?v=14"></script>
 </body>
 </html>

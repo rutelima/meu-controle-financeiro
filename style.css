@@ -1,152 +1,177 @@
 * {
-  box-sizing: border-box;
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
-  background-color: #f0f2f5;
-  color: #1c1e21;
-  padding: 20px 10px;
+  background-color: #fdf2f8; /* Rosa bem suave / pastel */
+  color: #333;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-header {
-  text-align: center;
-  margin-bottom: 25px;
-}
-
-header h1 {
-  color: #1b4332;
-  font-size: 28px;
-}
-
-header p {
-  color: #606770;
-  font-size: 14px;
+  justify-content: center;
+  padding: 20px;
 }
 
 .container {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
   width: 100%;
   max-width: 600px;
 }
 
-.card {
-  background: #ffffff;
-  padding: 20px;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+header {
+  text-align: center;
+  margin-bottom: 20px;
 }
 
-.card h2 {
-  font-size: 18px;
-  color: #1b4332;
+header h1 {
+  color: #831843;
+  font-size: 1.8rem;
+}
+
+header p {
+  color: #701a75;
+  font-size: 0.9rem;
+}
+
+.card {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  margin-bottom: 20px;
+}
+
+.form-card h2, .historico-card h2 {
+  font-size: 1.1rem;
+  color: #831843;
   margin-bottom: 15px;
 }
 
-.input-group {
+.grupo-input {
   margin-bottom: 12px;
 }
 
-.input-group label {
+.grupo-input label {
   display: block;
-  font-size: 12px;
+  font-size: 0.85rem;
+  color: #555;
+  margin-bottom: 4px;
   font-weight: 600;
-  margin-bottom: 5px;
-  color: #4b4f56;
 }
 
-.input-group input, .input-group select {
+.grupo-input input, .grupo-input select {
   width: 100%;
   padding: 10px;
-  border: 1px solid #ccd0d5;
-  border-radius: 8px;
-  font-size: 14px;
+  border: 1px solid #fbcfe8;
+  border-radius: 6px;
+  font-size: 0.95rem;
   outline: none;
-  transition: border 0.2s;
+  background-color: #fff;
 }
 
-.input-group input:focus, .input-group select:focus {
-  border-color: #2d6a4f;
+.grupo-input input:focus, .grupo-input select:focus {
+  border-color: #ec4899;
 }
 
-.btn {
+.btn-salvar {
   width: 100%;
-  padding: 12px;
-  background: #2d6a4f;
+  background-color: #ec4899;
   color: white;
   border: none;
-  border-radius: 8px;
-  font-size: 15px;
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 1rem;
   font-weight: bold;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background-color 0.2s;
+  margin-top: 10px;
 }
 
-.btn:hover {
-  background: #1b4332;
+.btn-salvar:hover {
+  background-color: #db2777;
 }
 
+/* Grid de Resumo dos Saldos */
 .cards-resumo {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr 1fr;
   gap: 12px;
+  margin-bottom: 20px;
 }
 
 .saldo-card {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  margin-bottom: 0;
   padding: 15px;
 }
 
 .saldo-card h3 {
-  font-size: 12px;
-  color: #606770;
+  font-size: 0.8rem;
+  color: #666;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
-.saldo-destaque {
-  background: #1b4332;
-  color: white;
-  grid-column: span 2;
-}
-
-.saldo-destaque h3 {
-  color: #b7e4c7;
-}
-
-.saldo-destaque .valor {
-  color: #ffffff !important;
-  font-size: 26px;
-}
-
-.valor {
-  font-size: 18px;
+.saldo-card .valor {
+  font-size: 1.2rem;
   font-weight: bold;
   margin-top: 5px;
 }
 
-.valor.positivo {
-  color: #2d6a4f;
+/* Saldo Geral: Unindo Rosa + Azul em Gradiente */
+.saldo-destaque {
+  grid-column: span 2;
+  background: linear-gradient(135deg, #ec4899 0%, #3b82f6 100%);
+  color: white;
 }
 
-.valor.negativo {
-  color: #d90429;
+.saldo-destaque h3 {
+  color: #fbcfe8;
 }
 
+.saldo-destaque .valor {
+  color: #ffffff;
+  font-size: 1.5rem;
+}
+
+/* Saldo Individual Rute (Rosa) */
+.saldo-rute-card {
+  background-color: #fdf2f8;
+  border: 2px solid #fbcfe8;
+}
+
+.saldo-rute-card h3 {
+  color: #be185d;
+}
+
+.saldo-rute-card .valor {
+  color: #db2777;
+}
+
+/* Saldo Individual Vanderson (Azul) */
+.saldo-vanderson-card {
+  background-color: #eff6ff;
+  border: 2px solid #bfdbfe;
+}
+
+.saldo-vanderson-card h3 {
+  color: #1d4ed8;
+}
+
+.saldo-vanderson-card .valor {
+  color: #2563eb;
+}
+
+.positivo {
+  color: #10b981;
+}
+
+.negativo {
+  color: #ef4444;
+}
+
+/* Lista de Transações */
 .lista {
   list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
 }
 
 .lista li {
@@ -154,17 +179,22 @@ header p {
   justify-content: space-between;
   align-items: center;
   padding: 12px;
-  background: #f8f9fa;
+  background-color: #f9fafb;
   border-radius: 8px;
-  border-left: 5px solid #2d6a4f;
+  margin-bottom: 8px;
+  border-left: 4px solid #ccc;
+}
+
+.lista li.entrada {
+  border-left-color: #10b981;
 }
 
 .lista li.despesa {
-  border-left-color: #d90429;
+  border-left-color: #ef4444;
 }
 
 .lista li.investimento {
-  border-left-color: #52b788;
+  border-left-color: #3b82f6;
 }
 
 .info-item {
@@ -172,15 +202,15 @@ header p {
   flex-direction: column;
 }
 
-.info-item span {
-  font-weight: 600;
-  font-size: 14px;
+.info-item strong {
+  font-size: 0.95rem;
+  color: #333;
 }
 
 .info-item small {
-  font-size: 11px;
-  color: #8d99ae;
-  text-transform: capitalize;
+  color: #6b7280;
+  font-size: 0.8rem;
+  margin-top: 2px;
 }
 
 .acoes-item {
@@ -189,25 +219,30 @@ header p {
   gap: 10px;
 }
 
+.acoes-item strong {
+  font-size: 0.95rem;
+}
+
 .btn-apagar {
   background: none;
   border: none;
-  color: #d90429;
-  font-size: 16px;
   cursor: pointer;
-  padding: 4px;
-  border-radius: 4px;
+  font-size: 1rem;
+  opacity: 0.6;
+  transition: opacity 0.2s;
 }
 
 .btn-apagar:hover {
-  background: #ffe5e5;
+  opacity: 1;
 }
+
+/* Badges e Etiquetas */
 .badge {
   display: inline-block;
   font-size: 0.75rem;
   padding: 2px 6px;
   border-radius: 4px;
-  margin-left: 6px;
+  margin-left: 4px;
 }
 
 .badge-pago {

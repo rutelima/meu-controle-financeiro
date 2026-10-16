@@ -22,6 +22,8 @@ const saldoTotalEl = document.getElementById('saldo-total');
 const totalInvestimentosEl = document.getElementById('total-investimentos');
 const saldoRuteEl = document.getElementById('saldo-rute');
 const saldoVandersonEl = document.getElementById('saldo-vanderson');
+const faturaRuteEl = document.getElementById('fatura-rute');
+const faturaVandersonEl = document.getElementById('fatura-vanderson');
 
 let transacoes = [];
 
@@ -29,15 +31,29 @@ function calcularSaldos() {
   let entradasGeral = 0;
   let despesasGeral = 0;
   let investimentosGeral = 0;
+  
   let saldoRute = 0;
   let saldoVanderson = 0;
+
+  let faturaRute = 0;
+  let faturaVanderson = 0;
 
   transacoes.forEach(t => {
     const valor = Number(t.valor) || 0;
     const tipo = t.tipo || 'despesa';
     const resp = t.responsavel || 'Rute';
+    const metodo = t.metodo || 'PIX';
 
-    // Totais Gerais
+    // Se for Cartão de Crédito e Despesa, lança na fatura do responsável (não desfalca a conta no momento)
+    if (metodo === 'Cartão de Crédito' && tipo === 'despesa') {
+      if (resp === 'Rute') faturaRute += valor;
+      if (resp === 'Vanderson') faturaVanderson += valor;
+      // Registramos na despesa geral para controle orçamentário do mês
+      despesasGeral += valor;
+      return; // Sai da iteração para não descontar do saldo bancário atual
+    }
+
+    // Lançamentos normais (PIX, Débito, Dinheiro ou Entradas/Investimentos)
     if (tipo === 'entrada') entradasGeral += valor;
     if (tipo === 'despesa') despesasGeral += valor;
     if (tipo === 'investimento') investimentosGeral += valor;
@@ -55,16 +71,19 @@ function calcularSaldos() {
     }
   });
 
-  // Saldo Geral é exatamente a soma dos saldos dos dois
-  const saldoGeral = entradasGeral - despesasGeral - investimentosGeral;
+  const saldoGeral = saldoRute + saldoVanderson;
 
   // Atualização no HTML
   if (totalEntradasEl) totalEntradasEl.textContent = `R$ ${entradasGeral.toFixed(2)}`;
   if (totalDespesasEl) totalDespesasEl.textContent = `R$ ${despesasGeral.toFixed(2)}`;
   if (saldoTotalEl) saldoTotalEl.textContent = `R$ ${saldoGeral.toFixed(2)}`;
   if (totalInvestimentosEl) totalInvestimentosEl.textContent = `R$ ${investimentosGeral.toFixed(2)}`;
+  
   if (saldoRuteEl) saldoRuteEl.textContent = `R$ ${saldoRute.toFixed(2)}`;
   if (saldoVandersonEl) saldoVandersonEl.textContent = `R$ ${saldoVanderson.toFixed(2)}`;
+  
+  if (faturaRuteEl) faturaRuteEl.textContent = `R$ ${faturaRute.toFixed(2)}`;
+  if (faturaVandersonEl) faturaVandersonEl.textContent = `R$ ${faturaVanderson.toFixed(2)}`;
 }
 
 window.removerTransacao = async function(id) {
