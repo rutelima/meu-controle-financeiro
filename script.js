@@ -35,31 +35,41 @@ function calcularSaldos() {
   transacoes.forEach(t => {
     const valor = Number(t.valor) || 0;
     const tipo = t.tipo || 'despesa';
-    
-    // Tratamento para registos antigos que não tinham responsável definido
-    const resp = t.responsavel || 'Rute';
+    const resp = t.responsavel; // Pode ser 'Rute', 'Vanderson' ou undefined (registos antigos)
 
     // Totais Gerais
     if (tipo === 'entrada') entradasGeral += valor;
     if (tipo === 'despesa') despesasGeral += valor;
     if (tipo === 'investimento') investimentosGeral += valor;
 
-    // Saldo Individual Rute
+    // Se o registo é especificamente da Rute
     if (resp === 'Rute') {
       if (tipo === 'entrada') saldoRute += valor;
       if (tipo === 'despesa' || tipo === 'investimento') saldoRute -= valor;
     }
-
-    // Saldo Individual Vanderson
-    if (resp === 'Vanderson') {
+    // Se o registo é especificamente do Vanderson
+    else if (resp === 'Vanderson') {
       if (tipo === 'entrada') saldoVanderson += valor;
       if (tipo === 'despesa' || tipo === 'investimento') saldoVanderson -= valor;
     }
+    // Se for registo antigo ou sem responsável definido, divide 50% / 50% entre os dois
+    else {
+      const metade = valor / 2;
+      if (tipo === 'entrada') {
+        saldoRute += metade;
+        saldoVanderson += metade;
+      }
+      if (tipo === 'despesa' || tipo === 'investimento') {
+        saldoRute -= metade;
+        saldoVanderson -= metade;
+      }
+    }
   });
 
+  // O Saldo Geral é exatamente a soma dos saldos de Rute e Vanderson
   const saldoGeral = entradasGeral - despesasGeral - investimentosGeral;
 
-  // Atualização da interface
+  // Atualização na tela
   if (totalEntradasEl) totalEntradasEl.textContent = `R$ ${entradasGeral.toFixed(2)}`;
   if (totalDespesasEl) totalDespesasEl.textContent = `R$ ${despesasGeral.toFixed(2)}`;
   if (saldoTotalEl) saldoTotalEl.textContent = `R$ ${saldoGeral.toFixed(2)}`;
@@ -87,7 +97,7 @@ function renderizarLista() {
       ? `<span class="badge badge-pendente">⏳ Pendente</span>` 
       : `<span class="badge badge-pago">✅ Pago</span>`;
 
-    const respText = t.responsavel ? ` • 👤 ${t.responsavel}` : ' • 👤 Rute';
+    const respText = t.responsavel ? ` • 👤 ${t.responsavel}` : ' • 💚 Compartilhado';
     const catText = t.categoria || 'Geral';
     const metText = t.metodo || 'PIX';
     const valNum = Number(t.valor) || 0;
