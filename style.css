@@ -115,14 +115,45 @@ header p {
   font-weight: bold;
 }
 
+/* SALDO GERAL: Mistura em Degradê de Rosa (Rute) + Azul (Vanderson) */
 .saldo-destaque {
   grid-column: span 2;
-  background: linear-gradient(135deg, #fbcfe8, #f472b6);
-  color: #831843;
+  background: linear-gradient(135deg, #fbcfe8 0%, #f472b6 40%, #7dd3fc 70%, #38bdf8 100%);
+  color: #1e293b;
+  border: 1px solid #f472b6;
+  box-shadow: 0 4px 12px rgba(236, 72, 153, 0.15);
 }
 
 .saldo-destaque h3 {
-  color: #831843;
+  color: #475569;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.saldo-destaque .valor {
+  font-size: 1.4rem;
+  color: #0f172a;
+}
+
+/* Saldo Individual da Rute (Rosa) */
+.saldo-rute-card {
+  background-color: #fce7f3;
+  border: 1px solid #fbcfe8;
+}
+
+.saldo-rute-card h3 {
+  color: #9d174d;
+}
+
+/* Saldo Individual do Vanderson (Azul) */
+.saldo-vanderson-card {
+  background-color: #e0f2fe;
+  border: 1px solid #bae6fd;
+}
+
+.saldo-vanderson-card h3 {
+  color: #0369a1;
 }
 
 .positivo { color: #16a34a; }

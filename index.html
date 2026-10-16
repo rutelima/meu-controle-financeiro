@@ -1,25 +1,26 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<!DOCTYPE html>
-<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nosso Dinheiro 💰</title>
 
-  <!-- Configurações para aplicativo no iPhone / Android -->
+  <!-- Configurações para aplicativo no iPhone / Android (PWA) -->
   <link rel="manifest" href="manifest.json">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="NossoDinheiro 💰">
 
-  <!-- Ícones para iOS (iPhone / Safari) e Android em alta definição -->
-  <link rel="apple-touch-icon" href="https://fav.farm/💰">
-  <link rel="icon" href="https://fav.farm/💰">
+  <!-- Ícones para iOS (iPhone / Safari) e Android -->
+  <link rel="apple-touch-icon" href="icon.png?v=3">
+  <link rel="apple-touch-icon" sizes="180x180" href="icon.png?v=3">
+  <link rel="apple-touch-icon" sizes="152x152" href="icon.png?v=3">
+  <link rel="apple-touch-icon" sizes="120x120" href="icon.png?v=3">
+  <link rel="icon" type="image/png" href="icon.png?v=3">
 
-  <!-- Estilos CSS -->
-  <link rel="stylesheet" href="style.css?v=2">
+  <!-- Estilos CSS (Versão v=4 para carregar a mistura Rosa + Azul no Saldo Geral) -->
+  <link rel="stylesheet" href="style.css?v=4">
 </head>
 <body>
 
@@ -29,7 +30,7 @@
       <p>Resumo financeiro do casal</p>
     </header>
 
-    <!-- Formulário -->
+    <!-- Formulário de Transação -->
     <section class="card form-card">
       <h2>Adicionar Transação</h2>
       <form id="form-transacao">
@@ -108,6 +109,7 @@
         <p id="total-despesas" class="valor negativo">R$ 0,00</p>
       </div>
 
+      <!-- Saldo Geral com a Mistura em Degradê de Rosa + Azul -->
       <div class="card saldo-card saldo-destaque">
         <h3>Saldo Restante (Geral)</h3>
         <p id="saldo-total" class="valor">R$ 0,00</p>
@@ -119,7 +121,7 @@
       </div>
     </section>
 
-    <!-- Cards de Saldos Individuais -->
+    <!-- Cards de Saldos Individuais (Rute Rosa / Vanderson Azul) -->
     <section class="cards-resumo">
       <div class="card saldo-card saldo-rute-card">
         <h3>Saldo Rute 👩</h3>
