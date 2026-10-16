@@ -35,41 +35,30 @@ function calcularSaldos() {
   transacoes.forEach(t => {
     const valor = Number(t.valor) || 0;
     const tipo = t.tipo || 'despesa';
-    const resp = t.responsavel; // Pode ser 'Rute', 'Vanderson' ou undefined (registos antigos)
+    const resp = t.responsavel || 'Rute';
 
     // Totais Gerais
     if (tipo === 'entrada') entradasGeral += valor;
     if (tipo === 'despesa') despesasGeral += valor;
     if (tipo === 'investimento') investimentosGeral += valor;
 
-    // Se o registo é especificamente da Rute
+    // Saldo Individual Rute
     if (resp === 'Rute') {
       if (tipo === 'entrada') saldoRute += valor;
       if (tipo === 'despesa' || tipo === 'investimento') saldoRute -= valor;
     }
-    // Se o registo é especificamente do Vanderson
-    else if (resp === 'Vanderson') {
+
+    // Saldo Individual Vanderson
+    if (resp === 'Vanderson') {
       if (tipo === 'entrada') saldoVanderson += valor;
       if (tipo === 'despesa' || tipo === 'investimento') saldoVanderson -= valor;
     }
-    // Se for registo antigo ou sem responsável definido, divide 50% / 50% entre os dois
-    else {
-      const metade = valor / 2;
-      if (tipo === 'entrada') {
-        saldoRute += metade;
-        saldoVanderson += metade;
-      }
-      if (tipo === 'despesa' || tipo === 'investimento') {
-        saldoRute -= metade;
-        saldoVanderson -= metade;
-      }
-    }
   });
 
-  // O Saldo Geral é exatamente a soma dos saldos de Rute e Vanderson
+  // Saldo Geral é exatamente a soma dos saldos dos dois
   const saldoGeral = entradasGeral - despesasGeral - investimentosGeral;
 
-  // Atualização na tela
+  // Atualização no HTML
   if (totalEntradasEl) totalEntradasEl.textContent = `R$ ${entradasGeral.toFixed(2)}`;
   if (totalDespesasEl) totalDespesasEl.textContent = `R$ ${despesasGeral.toFixed(2)}`;
   if (saldoTotalEl) saldoTotalEl.textContent = `R$ ${saldoGeral.toFixed(2)}`;
@@ -88,6 +77,11 @@ window.removerTransacao = async function(id) {
 
 function renderizarLista() {
   lista.innerHTML = '';
+  if (transacoes.length === 0) {
+    lista.innerHTML = '<li style="text-align: center; color: #888; padding: 15px;">Nenhuma transação cadastrada. Adicione os saldos iniciais acima! 🚀</li>';
+    return;
+  }
+
   transacoes.forEach((t) => {
     const li = document.createElement('li');
     li.classList.add(t.tipo || 'despesa');
@@ -97,7 +91,7 @@ function renderizarLista() {
       ? `<span class="badge badge-pendente">⏳ Pendente</span>` 
       : `<span class="badge badge-pago">✅ Pago</span>`;
 
-    const respText = t.responsavel ? ` • 👤 ${t.responsavel}` : ' • 💚 Compartilhado';
+    const respText = t.responsavel ? ` • 👤 ${t.responsavel}` : ' • 👤 Rute';
     const catText = t.categoria || 'Geral';
     const metText = t.metodo || 'PIX';
     const valNum = Number(t.valor) || 0;
@@ -124,7 +118,7 @@ onSnapshot(transacoesRef, (snapshot) => {
   renderizarLista();
   calcularSaldos();
 }, (error) => {
-  console.error("Erro ao sincronizar com o Firebase:", error);
+  console.error("Erro ao sincronizar:", error);
 });
 
 if (form) {
@@ -151,7 +145,7 @@ if (form) {
       });
       form.reset();
     } catch (error) {
-      console.error("Erro ao salvar transação:", error);
+      console.error("Erro ao salvar:", error);
     }
   });
 }
