@@ -35,42 +35,31 @@ function calcularSaldos() {
   transacoes.forEach(t => {
     const valor = Number(t.valor) || 0;
     const tipo = t.tipo || 'despesa';
-    const resp = t.responsavel || 'Casal';
+    
+    // Tratamento para registos antigos que não tinham responsável definido
+    const resp = t.responsavel || 'Rute';
 
     // Totais Gerais
     if (tipo === 'entrada') entradasGeral += valor;
     if (tipo === 'despesa') despesasGeral += valor;
     if (tipo === 'investimento') investimentosGeral += valor;
 
-    // Cálculo Rute
+    // Saldo Individual Rute
     if (resp === 'Rute') {
       if (tipo === 'entrada') saldoRute += valor;
       if (tipo === 'despesa' || tipo === 'investimento') saldoRute -= valor;
     }
 
-    // Cálculo Vanderson
+    // Saldo Individual Vanderson
     if (resp === 'Vanderson') {
       if (tipo === 'entrada') saldoVanderson += valor;
       if (tipo === 'despesa' || tipo === 'investimento') saldoVanderson -= valor;
-    }
-
-    // Se a despesa/investimento/entrada for do "Casal", divide 50% para cada
-    if (resp === 'Casal') {
-      const metade = valor / 2;
-      if (tipo === 'entrada') {
-        saldoRute += metade;
-        saldoVanderson += metade;
-      }
-      if (tipo === 'despesa' || tipo === 'investimento') {
-        saldoRute -= metade;
-        saldoVanderson -= metade;
-      }
     }
   });
 
   const saldoGeral = entradasGeral - despesasGeral - investimentosGeral;
 
-  // Atualiza no HTML
+  // Atualização da interface
   if (totalEntradasEl) totalEntradasEl.textContent = `R$ ${entradasGeral.toFixed(2)}`;
   if (totalDespesasEl) totalDespesasEl.textContent = `R$ ${despesasGeral.toFixed(2)}`;
   if (saldoTotalEl) saldoTotalEl.textContent = `R$ ${saldoGeral.toFixed(2)}`;
@@ -98,7 +87,7 @@ function renderizarLista() {
       ? `<span class="badge badge-pendente">⏳ Pendente</span>` 
       : `<span class="badge badge-pago">✅ Pago</span>`;
 
-    const respText = t.responsavel ? ` • 👤 ${t.responsavel}` : ' • 💚 Casal';
+    const respText = t.responsavel ? ` • 👤 ${t.responsavel}` : ' • 👤 Rute';
     const catText = t.categoria || 'Geral';
     const metText = t.metodo || 'PIX';
     const valNum = Number(t.valor) || 0;
@@ -125,7 +114,7 @@ onSnapshot(transacoesRef, (snapshot) => {
   renderizarLista();
   calcularSaldos();
 }, (error) => {
-  console.error("Erro ao escutar Firestore:", error);
+  console.error("Erro ao sincronizar com o Firebase:", error);
 });
 
 if (form) {
@@ -152,7 +141,7 @@ if (form) {
       });
       form.reset();
     } catch (error) {
-      console.error("Erro ao salvar:", error);
+      console.error("Erro ao salvar transação:", error);
     }
   });
 }
