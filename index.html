@@ -7,95 +7,125 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <h1>Nosso Dinheiro 💚</h1>
-    <p>Resumo financeiro do casal</p>
-  </header>
 
   <main class="container">
+    <header>
+      <h1>Nosso Dinheiro 💚</h1>
+      <p>Resumo financeiro do casal</p>
+    </header>
+
+    <!-- Formulário -->
     <section class="card form-card">
       <h2>Adicionar Transação</h2>
-<form id="form-transacao">
-  <div class="grupo-input">
-    <label for="descricao">Descrição:</label>
-    <input type="text" id="descricao" placeholder="Ex: Mercado, Conta de Luz..." required>
-  </div>
+      <form id="form-transacao">
+        <div class="grupo-input">
+          <label for="descricao">Descrição:</label>
+          <input type="text" id="descricao" placeholder="Ex: Mercado, Conta de Luz..." required>
+        </div>
 
-  <div class="grupo-input">
-    <label for="valor">Valor (R$):</label>
-    <input type="number" step="0.01" id="valor" placeholder="0,00" required>
-  </div>
+        <div class="grupo-input">
+          <label for="valor">Valor (R$):</label>
+          <input type="number" step="0.01" id="valor" placeholder="0,00" required>
+        </div>
 
-  <div class="grupo-input">
-    <label for="tipo">Tipo:</label>
-    <select id="tipo" required>
-      <option value="despesa">Despesa</option>
-      <option value="entrada">Entrada / Receita</option>
-      <option value="investimento">Investimento</option>
-    </select>
-  </div>
+        <div class="grupo-input">
+          <label for="tipo">Tipo:</label>
+          <select id="tipo" required>
+            <option value="despesa">Despesa</option>
+            <option value="entrada">Entrada / Receita</option>
+            <option value="investimento">Investimento</option>
+          </select>
+        </div>
 
-  <div class="grupo-input">
-    <label for="categoria">Categoria:</label>
-    <select id="categoria" required>
-      <option value="Alimentação">🛒 Alimentação</option>
-      <option value="Moradia">🏠 Moradia</option>
-      <option value="Transporte">🚗 Transporte</option>
-      <option value="Lazer">🍕 Lazer</option>
-      <option value="Contas">💡 Contas Fixas</option>
-      <option value="Salário">💰 Salário / Renda</option>
-      <option value="Investimentos">📈 Investimentos</option>
-      <option value="Outros">🏷️ Outros</option>
-    </select>
-  </div>
+        <div class="grupo-input">
+          <label for="responsavel">Responsável:</label>
+          <select id="responsavel" required>
+            <option value="Rute">👩 Rute</option>
+            <option value="Vanderson">👨 Vanderson</option>
+            <option value="Casal">💚 Casal / Ambos</option>
+          </select>
+        </div>
 
-  <div class="grupo-input">
-    <label for="metodo">Forma de Pagamento:</label>
-    <select id="metodo" required>
-      <option value="PIX">⚡ PIX</option>
-      <option value="Cartão de Crédito">💳 Cartão de Crédito</option>
-      <option value="Cartão de Débito">💳 Cartão de Débito</option>
-      <option value="Dinheiro">💵 Dinheiro</option>
-    </select>
-  </div>
+        <div class="grupo-input">
+          <label for="categoria">Categoria:</label>
+          <select id="categoria" required>
+            <option value="Alimentação">🛒 Alimentação</option>
+            <option value="Moradia">🏠 Moradia</option>
+            <option value="Transporte">🚗 Transporte</option>
+            <option value="Lazer">🍕 Lazer</option>
+            <option value="Contas">💡 Contas Fixas</option>
+            <option value="Salário">💰 Salário / Renda</option>
+            <option value="Investimentos">📈 Investimentos</option>
+            <option value="Outros">🏷️ Outros</option>
+          </select>
+        </div>
 
-  <div class="grupo-input">
-    <label for="status">Status:</label>
-    <select id="status" required>
-      <option value="Concluído">✅ Concluído / Pago</option>
-      <option value="Pendente">⏳ Pendente / A Vencer</option>
-    </select>
-  </div>
+        <div class="grupo-input">
+          <label for="metodo">Forma de Pagamento:</label>
+          <select id="metodo" required>
+            <option value="PIX">⚡ PIX</option>
+            <option value="Cartão de Crédito">💳 Cartão de Crédito</option>
+            <option value="Cartão de Débito">💳 Cartão de Débito</option>
+            <option value="Dinheiro">💵 Dinheiro</option>
+          </select>
+        </div>
 
-  <button type="submit" class="btn-salvar">Adicionar Transação</button>
-</form>
+        <div class="grupo-input">
+          <label for="status">Status:</label>
+          <select id="status" required>
+            <option value="Concluído">✅ Concluído / Pago</option>
+            <option value="Pendente">⏳ Pendente / A Vencer</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn-salvar">Adicionar Transação</button>
+      </form>
     </section>
 
+    <!-- Cards de Resumo Geral -->
     <section class="cards-resumo">
       <div class="card saldo-card">
         <h3>Entradas</h3>
         <p id="total-entradas" class="valor positivo">R$ 0,00</p>
       </div>
+
       <div class="card saldo-card">
         <h3>Despesas</h3>
         <p id="total-despesas" class="valor negativo">R$ 0,00</p>
       </div>
+
       <div class="card saldo-card saldo-destaque">
-        <h3>Saldo restante</h3>
+        <h3>Saldo Restante (Geral)</h3>
         <p id="saldo-total" class="valor">R$ 0,00</p>
       </div>
+
       <div class="card saldo-card">
         <h3>Investimentos</h3>
         <p id="total-investimentos" class="valor positivo">R$ 0,00</p>
       </div>
     </section>
 
+    <!-- Cards de Saldos Individuais -->
+    <section class="cards-resumo">
+      <div class="card saldo-card">
+        <h3>Saldo Rute 👩</h3>
+        <p id="saldo-rute" class="valor positivo">R$ 0,00</p>
+      </div>
+
+      <div class="card saldo-card">
+        <h3>Saldo Vanderson 👨</h3>
+        <p id="saldo-vanderson" class="valor positivo">R$ 0,00</p>
+      </div>
+    </section>
+
+    <!-- Histórico de Transações -->
     <section class="card historico-card">
       <h2>Histórico de Transações</h2>
       <ul id="lista-transacoes" class="lista"></ul>
     </section>
+
   </main>
 
-<script type="module" src="script.js?v=2"></script>
+  <script type="module" src="script.js?v=3"></script>
 </body>
 </html>

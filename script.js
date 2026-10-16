@@ -1,111 +1,164 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyC5G-Tr3kcntYm4wosc5n361pJ4VSWFqys",
-  authDomain: "nosso-dinheiro-56ad7.firebaseapp.com",
-  projectId: "nosso-dinheiro-56ad7",
-  storageBucket: "nosso-dinheiro-56ad7.firebasestorage.app",
-  messagingSenderId: "903996625427",
-  appId: "1:903996625427:web:f097fcdc3cf8e1173ee5e6"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const transacoesRef = collection(db, "transacoes");
-
-const form = document.getElementById('form-transacao');
-const lista = document.getElementById('lista-transacoes');
-const totalEntradasEl = document.getElementById('total-entradas');
-const totalDespesasEl = document.getElementById('total-despesas');
-const saldoTotalEl = document.getElementById('saldo-total');
-const totalInvestimentosEl = document.getElementById('total-investimentos');
-
-let transacoes = [];
-
-function atualizarValores() {
-  const entradas = transacoes
-    .filter(t => t.tipo === 'entrada')
-    .reduce((acc, t) => acc + t.valor, 0);
-
-  const despesas = transacoes
-    .filter(t => t.tipo === 'despesa')
-    .reduce((acc, t) => acc + t.valor, 0);
-
-  const investimentos = transacoes
-    .filter(t => t.tipo === 'investimento')
-    .reduce((acc, t) => acc + t.valor, 0);
-
-  const saldo = entradas - despesas - investimentos;
-
-  totalEntradasEl.textContent = `R$ ${entradas.toFixed(2)}`;
-  totalDespesasEl.textContent = `R$ ${despesas.toFixed(2)}`;
-  saldoTotalEl.textContent = `R$ ${saldo.toFixed(2)}`;
-  totalInvestimentosEl.textContent = `R$ ${investimentos.toFixed(2)}`;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-window.removerTransacao = async function(id) {
-  try {
-    await deleteDoc(doc(db, "transacoes", id));
-  } catch (error) {
-    console.error("Erro ao apagar:", error);
-  }
-};
-
-function renderizarLista() {
-  lista.innerHTML = '';
-  transacoes.forEach((t) => {
-    const li = document.createElement('li');
-    li.classList.add(t.tipo);
-    
-    const statusTag = t.status === 'Pendente' 
-      ? `<span class="badge badge-pendente">⏳ Pendente</span>` 
-      : `<span class="badge badge-pago">✅ Pago</span>`;
-
-    li.innerHTML = `
-      <div class="info-item">
-        <strong>${t.descricao}</strong>
-        <small>${t.categoria || 'Geral'} • ${t.metodo || 'PIX'} ${statusTag}</small>
-      </div>
-      <div class="acoes-item">
-        <strong>R$ ${t.valor.toFixed(2)}</strong>
-        <button class="btn-apagar" onclick="removerTransacao('${t.id}')" title="Apagar">🗑️</button>
-      </div>
-    `;
-    lista.appendChild(li);
-  });
+body {
+  background-color: #f4f6f8;
+  color: #333;
+  display: flex;
+  justify-content: center;
+  padding: 20px;
 }
 
-onSnapshot(transacoesRef, (snapshot) => {
-  transacoes = snapshot.docs.map(doc => ({
-    id: doc.id,
-    ...doc.data()
-  }));
-  renderizarLista();
-  atualizarValores();
-});
+.container {
+  width: 100%;
+  max-width: 600px;
+}
 
-form.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const descricao = document.getElementById('descricao').value;
-  const valor = parseFloat(document.getElementById('valor').value);
-  const tipo = document.getElementById('tipo').value;
-  const categoria = document.getElementById('categoria').value;
-  const metodo = document.getElementById('metodo').value;
-  const status = document.getElementById('status').value;
+header {
+  text-align: center;
+  margin-bottom: 20px;
+}
 
-  try {
-    await addDoc(transacoesRef, { 
-      descricao, 
-      valor, 
-      tipo, 
-      categoria, 
-      metodo, 
-      status,
-      data: new Date().toISOString()
-    });
-    form.reset();
-  } catch (error) {
-    console.error("Erro ao salvar:", error);
-  }
-});
+header h1 {
+  color: #1e4d3b;
+  font-size: 1.8rem;
+}
+
+header p {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.card {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  margin-bottom: 20px;
+}
+
+.form-card h2, .historico-card h2 {
+  font-size: 1.1rem;
+  color: #1e4d3b;
+  margin-bottom: 15px;
+}
+
+.grupo-input {
+  margin-bottom: 12px;
+}
+
+.grupo-input label {
+  display: block;
+  font-size: 0.85rem;
+  color: #555;
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+.grupo-input input, .grupo-input select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  outline: none;
+  background-color: #fff;
+}
+
+.grupo-input input:focus, .grupo-input select:focus {
+  border-color: #1e4d3b;
+}
+
+.btn-salvar {
+  width: 100%;
+  background-color: #1e4d3b;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: 10px;
+}
+
+.btn-salvar:hover {
+  background-color: #15372a;
+}
+
+/* Grid de Resumo dos Saldos */
+.cards-resumo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.saldo-card {
+  margin-bottom: 0;
+  padding: 15px;
+}
+
+.saldo-card h3 {
+  font-size: 0.8rem;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.saldo-card .valor {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+.saldo-destaque {
+  grid-column: span 2;
+  background-color: #1e4d3b;
+  color: white;
+}
+
+.saldo-destaque h3 {
+  color: #a3b899;
+}
+
+.saldo-destaque .valor {
+  color: #ffffff;
+  font-size: 1.5rem;
+}
+
+.positivo {
+  color: #10b981;
+}
+
+.negativo {
+  color: #ef4444;
+}
+
+/* Lista de Transações */
+.lista {
+  list-style: none;
+}
+
+.lista li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background-color: #f9fafb;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  border-left: 4px solid #ccc;
+}
+
+.lista li.entrada {
+  border-left-color: #10b981;
+}
+
+.lista li.despesa {
+  border-left-color: #
