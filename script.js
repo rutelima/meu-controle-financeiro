@@ -25,44 +25,56 @@ const saldoVandersonEl = document.getElementById('saldo-vanderson');
 
 let transacoes = [];
 
-function atualizarValores() {
-  const entradas = transacoes
-    .filter(t => t.tipo === 'entrada')
-    .reduce((acc, t) => acc + (Number(t.valor) || 0), 0);
+function calcularSaldos() {
+  let entradasGeral = 0;
+  let despesasGeral = 0;
+  let investimentosGeral = 0;
+  let saldoRute = 0;
+  let saldoVanderson = 0;
 
-  const despesas = transacoes
-    .filter(t => t.tipo === 'despesa')
-    .reduce((acc, t) => acc + (Number(t.valor) || 0), 0);
+  transacoes.forEach(t => {
+    const valor = Number(t.valor) || 0;
+    const tipo = t.tipo || 'despesa';
+    const resp = t.responsavel || 'Casal';
 
-  const investimentos = transacoes
-    .filter(t => t.tipo === 'investimento')
-    .reduce((acc, t) => acc + (Number(t.valor) || 0), 0);
+    // Totais Gerais
+    if (tipo === 'entrada') entradasGeral += valor;
+    if (tipo === 'despesa') despesasGeral += valor;
+    if (tipo === 'investimento') investimentosGeral += valor;
 
-  // Saldos individuais
-  const saldoRute = transacoes
-    .filter(t => t.responsavel === 'Rute')
-    .reduce((acc, t) => {
-      const v = Number(t.valor) || 0;
-      if (t.tipo === 'entrada') return acc + v;
-      if (t.tipo === 'despesa' || t.tipo === 'investimento') return acc - v;
-      return acc;
-    }, 0);
+    // Cálculo Rute
+    if (resp === 'Rute') {
+      if (tipo === 'entrada') saldoRute += valor;
+      if (tipo === 'despesa' || tipo === 'investimento') saldoRute -= valor;
+    }
 
-  const saldoVanderson = transacoes
-    .filter(t => t.responsavel === 'Vanderson')
-    .reduce((acc, t) => {
-      const v = Number(t.valor) || 0;
-      if (t.tipo === 'entrada') return acc + v;
-      if (t.tipo === 'despesa' || t.tipo === 'investimento') return acc - v;
-      return acc;
-    }, 0);
+    // Cálculo Vanderson
+    if (resp === 'Vanderson') {
+      if (tipo === 'entrada') saldoVanderson += valor;
+      if (tipo === 'despesa' || tipo === 'investimento') saldoVanderson -= valor;
+    }
 
-  const saldoTotal = entradas - despesas - investimentos;
+    // Se a despesa/investimento/entrada for do "Casal", divide 50% para cada
+    if (resp === 'Casal') {
+      const metade = valor / 2;
+      if (tipo === 'entrada') {
+        saldoRute += metade;
+        saldoVanderson += metade;
+      }
+      if (tipo === 'despesa' || tipo === 'investimento') {
+        saldoRute -= metade;
+        saldoVanderson -= metade;
+      }
+    }
+  });
 
-  if (totalEntradasEl) totalEntradasEl.textContent = `R$ ${entradas.toFixed(2)}`;
-  if (totalDespesasEl) totalDespesasEl.textContent = `R$ ${despesas.toFixed(2)}`;
-  if (saldoTotalEl) saldoTotalEl.textContent = `R$ ${saldoTotal.toFixed(2)}`;
-  if (totalInvestimentosEl) totalInvestimentosEl.textContent = `R$ ${investimentos.toFixed(2)}`;
+  const saldoGeral = entradasGeral - despesasGeral - investimentosGeral;
+
+  // Atualiza no HTML
+  if (totalEntradasEl) totalEntradasEl.textContent = `R$ ${entradasGeral.toFixed(2)}`;
+  if (totalDespesasEl) totalDespesasEl.textContent = `R$ ${despesasGeral.toFixed(2)}`;
+  if (saldoTotalEl) saldoTotalEl.textContent = `R$ ${saldoGeral.toFixed(2)}`;
+  if (totalInvestimentosEl) totalInvestimentosEl.textContent = `R$ ${investimentosGeral.toFixed(2)}`;
   if (saldoRuteEl) saldoRuteEl.textContent = `R$ ${saldoRute.toFixed(2)}`;
   if (saldoVandersonEl) saldoVandersonEl.textContent = `R$ ${saldoVanderson.toFixed(2)}`;
 }
@@ -86,7 +98,7 @@ function renderizarLista() {
       ? `<span class="badge badge-pendente">⏳ Pendente</span>` 
       : `<span class="badge badge-pago">✅ Pago</span>`;
 
-    const respTag = t.responsavel ? ` • 👤 ${t.responsavel}` : '';
+    const respText = t.responsavel ? ` • 👤 ${t.responsavel}` : ' • 💚 Casal';
     const catText = t.categoria || 'Geral';
     const metText = t.metodo || 'PIX';
     const valNum = Number(t.valor) || 0;
@@ -94,7 +106,7 @@ function renderizarLista() {
     li.innerHTML = `
       <div class="info-item">
         <strong>${t.descricao || 'Sem descrição'}</strong>
-        <small>${catText} • ${metText}${respTag} ${statusTag}</small>
+        <small>${catText} • ${metText}${respText} ${statusTag}</small>
       </div>
       <div class="acoes-item">
         <strong>R$ ${valNum.toFixed(2)}</strong>
@@ -111,7 +123,7 @@ onSnapshot(transacoesRef, (snapshot) => {
     ...doc.data()
   }));
   renderizarLista();
-  atualizarValores();
+  calcularSaldos();
 }, (error) => {
   console.error("Erro ao escutar Firestore:", error);
 });
